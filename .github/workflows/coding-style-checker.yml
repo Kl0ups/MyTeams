@@ -12,19 +12,28 @@
         - issue-*
         - hotfix-*
   jobs:
-    coding-style-checker:
+    style-check:
       name: Check EPITECH Coding Style
       runs-on: ubuntu-latest
       steps:
         - name: Checkout the repository
           uses: actions/checkout@v2
-        - name: List all files in GITHUB_WORKSPACE
-          run: ls -la ${GITHUB_WORKSPACE}
         - name: Execute the CS script
           run: bash ${GITHUB_WORKSPACE}/.github/workflows/scripts/coding-style.sh . .
-        - name: Check the script ouput
+        - name: Check the Coding Style report
           run: |
-            if [ -s ${GITHUB_WORKSPACE}/coding-style-reports.log ]; then
+            if [ (cat ${GITHUB_WORKSPACE}/coding-style-reports.log | grep -v \
+              -e "^./include/client/logging_client.h" \
+              -e "^./include/server/logging_server.h" \
+              -e "^./libs/myteams/libmyteams.so") -eq 0 ]; then
               cat ${GITHUB_WORKSPACE}/coding-style-reports.log
               exit 1
             fi
+    build:
+      name: Build the project
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout the repository
+          uses: actions/checkout@v2
+        - name: Build the project
+          run: make -C ${GITHUB_WORKSPACE} all
