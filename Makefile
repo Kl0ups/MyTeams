@@ -24,7 +24,7 @@ SERV_BINARY = myteams_server
 
 CLI_BINARY = myteams_cli
 
-CFLAGS = -Wall -Wextra -Werror -Iinclude
+CFLAGS = -Wall -Wextra -Werror
 
 DEBUG_FLAGS = -g3 -Wpedantic
 
@@ -55,11 +55,11 @@ CLI_TEST_PARAMS = 127.0.0.1 $(SHUFFLE)
 all: $(SERV_BINARY) $(CLI_BINARY)
 
 $(SERV_BINARY): $(SERV_C_OBJ)
-	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS)
+	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS) -I./include/server
 	@echo -e '[Finish]' $(SERV_BINARY) 'compiled'
 
 $(CLI_BINARY): $(CLI_C_OBJ)
-	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS)
+	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS) -I./include/client
 	@echo -e '[Finish]' $(CLI_BINARY) 'compiled'
 
 clean:
