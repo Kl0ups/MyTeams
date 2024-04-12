@@ -22,7 +22,7 @@
           run: bash ${GITHUB_WORKSPACE}/.github/workflows/scripts/coding-style.sh . .
         - name: Check the Coding Style report
           run: |
-            if [ (cat ${GITHUB_WORKSPACE}/coding-style-reports.log | grep -v \
+            if [ $(cat ${GITHUB_WORKSPACE}/coding-style-reports.log | grep -v \
               -e "^./include/client/logging_client.h" \
               -e "^./include/server/logging_server.h" \
               -e "^./libs/myteams/libmyteams.so") -eq 0 ]; then
