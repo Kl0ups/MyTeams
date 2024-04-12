@@ -55,11 +55,13 @@ CLI_TEST_PARAMS = 127.0.0.1 $(SHUFFLE)
 all: $(SERV_BINARY) $(CLI_BINARY)
 
 $(SERV_BINARY): $(SERV_C_OBJ)
-	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS) -I./include/server
+	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS) -I./include/server \
+	-lmyteams -L./libs/myteams
 	@echo -e '[Finish]' $(SERV_BINARY) 'compiled'
 
 $(CLI_BINARY): $(CLI_C_OBJ)
-	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS) -I./include/client
+	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS) -I./include/client \
+	-lmyteams -L./libs/myteams
 	@echo -e '[Finish]' $(CLI_BINARY) 'compiled'
 
 clean:
