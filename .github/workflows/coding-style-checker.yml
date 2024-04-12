@@ -17,13 +17,7 @@
       runs-on: ubuntu-latest
       steps:
         - name: Execute the CS script
-          run: bash ${GITHUB_WORKSPACE}/scripts/coding-style.sh.sh . . > ${GITHUB_WORKSPACE}/exec.log 2>&1
-        - name: Check if the script failed
-          run: |
-            if [ -s ${GITHUB_WORKSPACE}/exec.log ]; then
-              cat ${GITHUB_WORKSPACE}/exec.log
-              exit 1
-            fi
+          run: bash ${GITHUB_WORKSPACE}/scripts/coding-style.sh.sh . .
         - name: Check the script ouput (coding-style-reports.log)
           run: |
             if [ -s ${GITHUB_WORKSPACE}/coding-style-reports.log ]; then
