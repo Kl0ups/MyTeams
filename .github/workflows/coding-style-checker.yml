@@ -1,0 +1,32 @@
+  on:
+    push:
+      branches:
+        - main
+        - develop
+        - issue-*
+        - hotfix-*
+    pull_request:
+      branches:
+        - main
+        - develop
+        - issue-*
+        - hotfix-*
+  jobs:
+    coding-style-checker:
+      name: Check EPITECH Coding Style
+      runs-on: ubuntu-latest
+      steps:
+        - name: Execute the CS script
+          run: bash ${GITHUB_WORKSPACE}/scripts/coding-style.sh.sh . . > ${GITHUB_WORKSPACE}/exec.log 2>&1
+        - name: Check if the script failed
+          run: |
+            if [ -s ${GITHUB_WORKSPACE}/exec.log ]; then
+              cat ${GITHUB_WORKSPACE}/exec.log
+              exit 1
+            fi
+        - name: Check the script ouput (coding-style-reports.log)
+          run: |
+            if [ -s ${GITHUB_WORKSPACE}/coding-style-reports.log ]; then
+              cat ${GITHUB_WORKSPACE}/coding-style-reports.log
+              exit 1
+            fi
