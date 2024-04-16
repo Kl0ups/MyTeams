@@ -10,7 +10,8 @@ RM = rm -rf
 
 SERV_SRC = app/server.c
 
-CLI_SRC = app/client.c
+CLI_SRC = app/client.c	\
+		src/send_messages.c
 
 SRC_TEST = ./test/main.c
 
@@ -24,7 +25,7 @@ SERV_BINARY = myteams_server
 
 CLI_BINARY = myteams_cli
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I./include/ #-lmyteams -L./libs/myteams
 
 DEBUG_FLAGS = -g3 -Wpedantic
 
@@ -55,13 +56,11 @@ CLI_TEST_PARAMS = 127.0.0.1 $(SHUFFLE)
 all: $(SERV_BINARY) $(CLI_BINARY)
 
 $(SERV_BINARY): $(SERV_C_OBJ)
-	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS) -I./include/server \
-	-lmyteams -L./libs/myteams
+	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS)
 	@echo -e '[Finish]' $(SERV_BINARY) 'compiled'
 
 $(CLI_BINARY): $(CLI_C_OBJ)
-	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS) -I./include/client \
-	-lmyteams -L./libs/myteams
+	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS)
 	@echo -e '[Finish]' $(CLI_BINARY) 'compiled'
 
 clean:
