@@ -17,7 +17,9 @@ int send_messages(int sockfd)
     bzero(buffer, size);
     while (1) {
         getline(&buffer, &size, stdin);
-        write(sockfd, buffer, size);
+        buffer[strlen(buffer) - 1] = '\r';
+        buffer[strlen(buffer)] = '\n';
+        write(sockfd, buffer, size + 1);
         bzero(buffer, size);
         read(sockfd, buffer, size);
         write(0, buffer, size);

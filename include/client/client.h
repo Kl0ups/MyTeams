@@ -15,5 +15,6 @@
 #include <arpa/inet.h>
 #include <sys/select.h>
 #include <strings.h>
+#include <string.h>
 
 int send_messages(int);
