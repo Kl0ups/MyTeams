@@ -60,13 +60,9 @@ typedef union data_u {
     message_t message;
 } data_t;
 
-typedef union packet_u {
-    data_t p_data;
-    data_t *p_data_list;
-} packet_t;
-
 typedef struct transfer_s {
     char *t_command;
-    packet_t t_packet;
-    __attribute__((unused)) data_t t_extra;
+    unsigned int p_size;
+    data_t *p_data;
+    __attribute__((unused)) data_t p_extra;
 } transfer_t;
