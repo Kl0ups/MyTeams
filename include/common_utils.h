@@ -9,6 +9,7 @@
 
 #include <time.h>
 #include <uuid/uuid.h>
+#include <stdbool.h>
 
 typedef struct client_s {
     uuid_t id;
