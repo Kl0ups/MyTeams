@@ -18,3 +18,8 @@
 #include <string.h>
 
 int send_messages(int);
+int handle_display_command6(char *, transfer_t);
+int handle_display_command5(char *, transfer_t);
+int handle_display_command4(char *, transfer_t);
+int handle_display_command3(char *, transfer_t);
+int handle_display_command2(char *, transfer_t);
