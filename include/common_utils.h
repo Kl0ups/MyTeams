@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <time.h>
 #include <uuid/uuid.h>
 
 typedef struct client_s {
@@ -20,6 +21,7 @@ typedef struct client_s {
 
 typedef struct team_s {
     uuid_t id;
+    time_t ctt;
     char *name, *description;
     uuid_t *channels;
     uuid_t *members;
@@ -27,6 +29,7 @@ typedef struct team_s {
 
 typedef struct channel_s {
     uuid_t id;
+    time_t ctt;
     char *name, *description;
     uuid_t *threads;
     uuid_t *members;
@@ -34,22 +37,35 @@ typedef struct channel_s {
 
 typedef struct thread_s {
     uuid_t id;
+    time_t ctt;
     char *name;
     char *post;
     uuid_t *r_message;
 } thread_t;
 
-typedef struct discussion_s {
+typedef struct message_s {
     uuid_t id;
+    time_t ctt;
     uuid_t t_client;
     uuid_t r_client;
     char *msg;
-} discussion_t;
+} message_t;
 
 typedef union data_u {
     client_t client;
     team_t team;
     channel_t channel;
     thread_t thread;
-    discussion_t discussion;
+    message_t message;
 } data_t;
+
+typedef union packet_u {
+    data_t p_data;
+    data_t *p_data_list;
+} packet_t;
+
+typedef struct transfer_s {
+    char *t_command;
+    packet_t t_packet;
+    __attribute__((unused)) data_t t_extra;
+} transfer_t;
