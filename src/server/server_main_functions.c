@@ -74,7 +74,6 @@ void server_free_data(server_t *serv)
 // }
 static int server_loop(server_t *serv)
 {
-    printf("Server started\n");
     server_free_data(serv);
     return 0;
 }
@@ -86,8 +85,7 @@ static server_t *start_server(server_t *inst, int port)
     if (port < 0 || !inst) {
         return NULL;
     }
-    *inst = init_server(port);
-    if (!inst) {
+    if (!init_server(inst, port)) {
         return NULL;
     }
     if (load_database(inst, db) == -1) {
@@ -101,7 +99,7 @@ int teams_server(int port)
     server_t *serv = malloc(sizeof(server_t));
 
     if (!start_server(serv, port)) {
-        write(2, "Error while starting server\n", 29);
+        fprintf(stderr, "Error while starting server\n");
         return 84;
     }
     return server_loop(serv);
