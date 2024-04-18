@@ -16,6 +16,7 @@ static void print_server_log(server_t *serv, int ret)
     (void)ret;
 }
 
+// TODO : finish the handle_request function
 static int handle_clients_read(server_t *server)
 {
     client_t *client = NULL;
@@ -52,6 +53,7 @@ static int handle_clients_write(server_t *serv)
     return 0;
 }
 
+// TODO : print the server logs using library
 int manage_write_set(server_t *serv)
 {
     int ret = 0;
