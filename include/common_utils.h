@@ -114,5 +114,5 @@ typedef struct transfer_s {
     char *t_command;
     unsigned int p_size;
     data_t *p_data;
-    __attribute__((unused)) data_t p_extra;
+    data_t p_extra;
 } transfer_t;
