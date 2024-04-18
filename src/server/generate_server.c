@@ -45,29 +45,36 @@ static int init_server_members(server_t *server)
     return 0;
 }
 
-// TODO: fix setsockopt
-server_t *init_server(server_t *server, unsigned short port)
+static void init_server_socket(server_t *server, unsigned short port)
 {
-    int enable = 1;
-
     server->fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     server->info = create_socket_info(port);
-    if (bind(server->fd,
-        (struct sockaddr *)server->info, sizeof(socket_t))) {
+    if (server->fd == -1) {
+        perror("Failed to create server socket");
+        exit(84);
+    }
+}
+
+// TODO: fix setsockopt
+server_t *init_server(server_t *serv, unsigned short port)
+{
+    int ok = 1;
+
+    init_server_socket(serv, port);
+    if (bind(serv->fd,
+        (struct sockaddr *)serv->info, sizeof(socket_t))) {
         perror("Failed to bind server socket");
         return NULL;
     }
-    if (listen(server->fd, 0)) {
+    if (listen(serv->fd, 0)) {
         perror("Failed to listen on server socket");
         return NULL;
     }
-    if (setsockopt(server->fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
+    if (setsockopt(serv->fd, SOL_SOCKET, SO_REUSEADDR, &ok, sizeof(int)) < 0) {
         perror("Failed to set socket options");
         return NULL;
     }
-    if (init_server_members(server)) {
-        fprintf(stderr, "Failed to init server members\n");
+    if (init_server_members(serv))
         return NULL;
-    }
-    return server;
+    return serv;
 }
