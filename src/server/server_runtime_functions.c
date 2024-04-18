@@ -11,27 +11,27 @@
 
 void clear_serverset(server_t server)
 {
-    client_t *client = server.clients;
+    w_client_t *client = server.clients;
 
     FD_ZERO(server.r_set);
     FD_ZERO(server.w_set);
     FD_SET(server.fd, server.w_set);
     FD_SET(server.fd, server.r_set);
     for (unsigned int i = 0; i < server.client_nb; i++) {
-        FD_SET(client[i].fd, server.r_set);
-        FD_SET(client[i].fd, server.w_set);
+        FD_SET(client[i].info.fd, server.r_set);
+        FD_SET(client[i].info.fd, server.w_set);
     }
 }
 
 int setup_serverset(server_t server)
 {
-    client_t *client = server.clients;
+    w_client_t *client = server.clients;
     int max_fd = server.fd;
 
     for (unsigned int i = 0; i < server.client_nb; i++) {
-        FD_SET(client[i].fd, server.r_set);
-        FD_SET(client[i].fd, server.w_set);
-        max_fd = MAX(max_fd, client[i].fd);
+        FD_SET(client[i].info.fd, server.r_set);
+        FD_SET(client[i].info.fd, server.w_set);
+        max_fd = MAX(max_fd, client[i].info.fd);
     }
     return max_fd;
 }
@@ -41,9 +41,5 @@ int server_select(server_t server, int max_fd)
     struct timeval timeout = {5, 0};
     int ret = select(max_fd + 1, server.r_set, server.w_set, NULL, &timeout);
 
-    if (ret < 0) {
-        perror("Failed to select server");
-        return 1;
-    }
-    return 0;
+    return ret < 0 ? 1 : 0;
 }

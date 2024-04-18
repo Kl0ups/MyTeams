@@ -13,21 +13,21 @@
 void server_clear_clients(server_t *serv)
 {
     for (unsigned int i = 0; i < serv->client_nb; i++) {
-        close(serv->clients[i].fd);
-        if (serv->clients[i].username)
-            free(serv->clients[i].username);
-        if (serv->clients[i].password)
-            free(serv->clients[i].password);
-        if (serv->clients[i].t_msg)
-            free(serv->clients[i].t_msg);
-        if (serv->clients[i].r_msg)
-            free(serv->clients[i].r_msg);
-        if (serv->clients[i].team)
-            free(serv->clients[i].team);
-        if (serv->clients[i].channel)
-            free(serv->clients[i].channel);
-        if (serv->clients[i].thread)
-            free(serv->clients[i].thread);
+        close(serv->clients[i].info.fd);
+        if (serv->clients[i].info.username)
+            free(serv->clients[i].info.username);
+        if (serv->clients[i].info.password)
+            free(serv->clients[i].info.password);
+        if (serv->clients[i].info.t_msg)
+            free(serv->clients[i].info.t_msg);
+        if (serv->clients[i].info.r_msg)
+            free(serv->clients[i].info.r_msg);
+        if (serv->clients[i].info.team)
+            free(serv->clients[i].info.team);
+        if (serv->clients[i].info.channel)
+            free(serv->clients[i].info.channel);
+        if (serv->clients[i].info.thread)
+            free(serv->clients[i].info.thread);
     }
     if (serv->clients)
         free(serv->clients);

@@ -24,6 +24,10 @@ typedef enum database_depth {
     MESSAGES
 } db_depth_t;
 
+typedef struct w_client_s {
+    client_t info;
+    transfer_t data;
+} w_client_t;
 
 typedef struct sockaddr_in socket_t;
 
@@ -33,7 +37,7 @@ typedef struct server_s {
     fd_set *w_set;
     fd_set *r_set;
 
-    client_t *clients;
+    w_client_t *clients;
     team_t *teams;
     channel_t *channels;
     thread_t *threads;
