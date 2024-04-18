@@ -15,6 +15,6 @@ int setup_serverset(server_t server);
 
 int server_select(server_t server, int max_fd);
 
-server_t init_server(unsigned short port);
+server_t *init_server(server_t *server, unsigned short port);
 
 int teams_server(int port);

@@ -29,14 +29,13 @@ static int init_server_members(server_t *server)
     server->client_nb = 0;
     server->channels = NULL;
     server->channel_nb = 0;
-    server->threads = NULL;
+    server->messages = NULL;
     server->team_nb = 0;
     server->teams = NULL;
     server->thread_nb = 0;
-    server->messages = NULL;
+    server->threads = NULL;
     server->message_nb = 0;
-    server->r_set = NULL;
-    server->w_set = NULL;
+    server->messages = NULL;
     server->r_set = malloc(sizeof(fd_set));
     server->w_set = malloc(sizeof(fd_set));
     if (!server->r_set || !server->w_set) {
@@ -46,24 +45,28 @@ static int init_server_members(server_t *server)
     return 0;
 }
 
-server_t *init_server(unsigned short port)
+// TODO: fix setsockopt
+server_t *init_server(server_t *server, unsigned short port)
 {
-    server_t *server = malloc(sizeof(server_t));
     int enable = 1;
 
     server->fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     server->info = create_socket_info(port);
     if (bind(server->fd,
         (struct sockaddr *)server->info, sizeof(socket_t))) {
-        return NULL;
-    }
-    if (setsockopt(server->fd, SOL_SOCKET, SO_REUSEPORT, &enable, 1) < 0) {
+        perror("Failed to bind server socket");
         return NULL;
     }
     if (listen(server->fd, 0)) {
+        perror("Failed to listen on server socket");
+        return NULL;
+    }
+    if (setsockopt(server->fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
+        perror("Failed to set socket options");
         return NULL;
     }
     if (init_server_members(server)) {
+        fprintf(stderr, "Failed to init server members\n");
         return NULL;
     }
     return server;
