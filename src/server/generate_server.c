@@ -14,7 +14,6 @@ static socket_t *create_socket_info(unsigned short port)
     struct sockaddr_in *serv_info = malloc(sizeof(struct sockaddr_in));
 
     if (!serv_info) {
-        perror("Failed to allocate memory for server info");
         return NULL;
     }
     serv_info->sin_family = AF_INET;
@@ -38,10 +37,8 @@ static int init_server_members(server_t *server)
     server->messages = NULL;
     server->r_set = malloc(sizeof(fd_set));
     server->w_set = malloc(sizeof(fd_set));
-    if (!server->r_set || !server->w_set) {
-        perror("Failed to allocate memory for server fd_set");
+    if (!server->r_set || !server->w_set)
         return 1;
-    }
     return 0;
 }
 
@@ -49,31 +46,20 @@ static void init_server_socket(server_t *server, unsigned short port)
 {
     server->fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     server->info = create_socket_info(port);
-    if (server->fd == -1) {
-        perror("Failed to create server socket");
-        exit(84);
-    }
 }
 
-// TODO: fix setsockopt
 server_t *init_server(server_t *serv, unsigned short port)
 {
     int ok = 1;
 
     init_server_socket(serv, port);
     if (bind(serv->fd,
-        (struct sockaddr *)serv->info, sizeof(socket_t))) {
-        perror("Failed to bind server socket");
+        (struct sockaddr *)serv->info, sizeof(socket_t)))
         return NULL;
-    }
-    if (listen(serv->fd, 0)) {
-        perror("Failed to listen on server socket");
+    if (listen(serv->fd, 0))
         return NULL;
-    }
-    if (setsockopt(serv->fd, SOL_SOCKET, SO_REUSEADDR, &ok, sizeof(int)) < 0) {
-        perror("Failed to set socket options");
+    if (setsockopt(serv->fd, SOL_SOCKET, SO_REUSEADDR, &ok, sizeof(int)) < 0)
         return NULL;
-    }
     if (init_server_members(serv))
         return NULL;
     return serv;
