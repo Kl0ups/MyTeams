@@ -16,8 +16,10 @@
 #include <sys/select.h>
 #include <strings.h>
 #include <string.h>
+#include "common_utils.h"
 
 int send_messages(int);
+const char *str_id(uuid_t id);
 int handle_display_command6(char *, transfer_t);
 int handle_display_command5(char *, transfer_t);
 int handle_display_command4(char *, transfer_t);
