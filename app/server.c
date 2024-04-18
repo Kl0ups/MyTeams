@@ -13,14 +13,10 @@ int main(int ac, const char *av[])
 {
     int port = -1;
 
-    if (ac != 2) {
-        write(2, "Invalid number of arguments\n", 29);
+    if (ac != 2)
         return (84);
-    }
     port = (int)strtol(av[1], NULL, 10);
-    if (port < 0) {
-        write(2, "Invalid port\n", 13);
+    if (port < 0)
         return (84);
-    }
     return (teams_server(port));
 }
