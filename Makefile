@@ -31,9 +31,11 @@ SERV_BINARY = myteams_server
 
 CLI_BINARY = myteams_cli
 
-CFLAGS = -Wall -Wextra -Werror -I./include/ -lmyteams -L./libs/myteams
+CFLAGS = -Wall -Wextra -Werror -I./include/ -lmyteams -L./libs/myteams -luuid
 
 DEBUG_FLAGS = -g3 -Wpedantic
+
+DOCKER_LD_ENV := LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/test/libs/myteams
 
 SHUFFLE := $(shell shuf -i1024-65535 -n1)
 
