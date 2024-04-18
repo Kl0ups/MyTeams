@@ -11,13 +11,13 @@
 
 const char *str_id(uuid_t id)
 {
-    const char new_id[37];
+    static const char new_id[37] = {};
 
     uuid_parse(new_id, id);
     return new_id;
 }
 
-int handle_display_command1(char *command, transfer_t dt)
+static int handle_display_command1(char *command, transfer_t dt)
 {
     if (strcmp(command, "EVENT TEAM CREATED")) {
         return client_event_team_created(str_id(dt.p_data[0].team.id)
@@ -41,7 +41,7 @@ int handle_display_command1(char *command, transfer_t dt)
     return handle_display_command2(command, dt);
 }
 
-int handle_display_command0(char *command, transfer_t dt)
+static int handle_display_command0(char *command, transfer_t dt)
 {
     if (strcmp(command, "LOG IN")) {
         return client_event_logged_in(str_id(dt.p_data[0].client.id)
@@ -78,7 +78,7 @@ int send_messages(int sockfd)
         send(sockfd, buffer, size + 1, 0);
         bzero(buffer, size);
         recv(sockfd, &infos, sizeof(transfer_t), 0);
-        handle_display_command1(infos.t_command, infos);
+        handle_display_command0(infos.t_command, infos);
     }
     return 0;
 }

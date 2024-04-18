@@ -9,12 +9,12 @@
 #include "client/logging_client.h"
 #include "common_utils.h"
 
-int handle_display_command6(char *command, transfer_t dt)
+static int handle_display_command6(char *command, transfer_t dt)
 {
     if (strcmp(command, "ERROR USER"))
         return client_error_unknown_user(str_id(dt.p_data[0].client.id));
     if (strcmp(command, "THREADS")) {
-        for (int i = 0; i < dt.p_size; i++) {
+        for (unsigned int i = 0; i < dt.p_size; i++) {
             client_channel_print_threads(str_id(dt.p_data[i].thread.id)
             , str_id(dt.p_data[i].thread.owner), dt.p_data[i].thread.ctt
             , dt.p_data[i].thread.name, dt.p_data[i].thread.post);
@@ -22,7 +22,7 @@ int handle_display_command6(char *command, transfer_t dt)
         return 0;
     }
     if (strcmp(command, "REPLIES")) {
-        for (int i = 0; i < dt.p_size; i++) {
+        for (unsigned int i = 0; i < dt.p_size; i++) {
             client_thread_print_replies(str_id(dt.p_extra.thread.id)
             , str_id(dt.p_data[i].message.t_client), dt.p_data[i].message.ctt
             , dt.p_data[i].message.msg);
@@ -33,7 +33,7 @@ int handle_display_command6(char *command, transfer_t dt)
     return 1;
 }
 
-int handle_display_command5(char *command, transfer_t dt)
+static int handle_display_command5(char *command, transfer_t dt)
 {
     if (strcmp(command, "THREAD CREATED")) {
         return client_print_thread_created(str_id(dt.p_data[0].thread.id)
@@ -56,7 +56,7 @@ int handle_display_command5(char *command, transfer_t dt)
     return handle_display_command6(command, dt);
 }
 
-int handle_display_command4(char *command, transfer_t dt)
+static int handle_display_command4(char *command, transfer_t dt)
 {
     if (strcmp(command, "CHANNEL")) {
         return client_print_channel(str_id(dt.p_data[0].channel.id)
@@ -71,7 +71,7 @@ int handle_display_command4(char *command, transfer_t dt)
         , dt.p_data[0].channel.name, dt.p_data[0].channel.description);
     }
     if (strcmp(command, "CHANNELS")) {
-        for (int i = 0; i < dt.p_size; i++) {
+        for (unsigned int i = 0; i < dt.p_size; i++) {
             client_team_print_channels(str_id(dt.p_data[i].channel.id)
             , dt.p_data[i].channel.name, dt.p_data[i].channel.description);
         }
@@ -80,10 +80,10 @@ int handle_display_command4(char *command, transfer_t dt)
     return handle_display_command5(command, dt);
 }
 
-int handle_display_command3(char *command, transfer_t dt)
+static int handle_display_command3(char *command, transfer_t dt)
 {
     if (strcmp(command, "MESSAGES")) {
-        for (int i = 0; i < dt.p_size; i++) {
+        for (unsigned int i = 0; i < dt.p_size; i++) {
             client_private_message_print_messages(
             str_id(dt.p_data[i].message.t_client)
             , dt.p_data[i].message.ctt, dt.p_data[i].message.msg);
@@ -106,14 +106,14 @@ int handle_display_command3(char *command, transfer_t dt)
 int handle_display_command2(char *command, transfer_t dt)
 {
     if (strcmp(command, "USERS")) {
-        for (int i = 0; i < dt.p_size; i++) {
+        for (unsigned int i = 0; i < dt.p_size; i++) {
             client_print_users(str_id(dt.p_data[i].client.id)
             , dt.p_data[i].client.username, dt.p_data[i].client.is_active);
         }
         return 0;
     }
     if (strcmp(command, "TEAMS")){
-        for (int i = 0; i < dt.p_size; i++) {
+        for (unsigned int i = 0; i < dt.p_size; i++) {
             client_print_teams(str_id(dt.p_data[i].team.id)
             , dt.p_data[i].team.name, dt.p_data[i].team.description);
         }

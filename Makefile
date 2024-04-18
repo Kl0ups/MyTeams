@@ -11,7 +11,8 @@ RM = rm -rf
 SERV_SRC = app/server.c
 
 CLI_SRC = app/client.c	\
-		src/send_messages.c
+		src/send_messages.c \
+		src/handle_display.c
 
 SRC_TEST = ./test/main.c
 
@@ -25,7 +26,7 @@ SERV_BINARY = myteams_server
 
 CLI_BINARY = myteams_cli
 
-CFLAGS = -Wall -Wextra -Werror -I./include/ #-lmyteams -L./libs/myteams
+CFLAGS = -Wall -Wextra -Werror -I./include/ -lmyteams -L./libs/myteams -luuid
 
 DEBUG_FLAGS = -g3 -Wpedantic
 
