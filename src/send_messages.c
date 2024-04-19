@@ -80,5 +80,6 @@ int send_messages(int sockfd)
         recv(sockfd, &infos, sizeof(transfer_t), 0);
         handle_display_command0(infos.t_command, infos);
     }
+    free(buffer);
     return 0;
 }
