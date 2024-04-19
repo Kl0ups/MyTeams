@@ -9,4 +9,4 @@
 
 #include "server/data_utils.h"
 
-int handle_request(server_t *server);
+int handle_request(server_t *server, unsigned int client_index);
