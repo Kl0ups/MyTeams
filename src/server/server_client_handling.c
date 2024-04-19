@@ -41,13 +41,14 @@ static int handle_clients_write(server_t *serv)
 {
     client_t *client = NULL;
     transfer_t *data = NULL;
+    ssize_t byte = 0;
 
     for (unsigned int i = 0; i < serv->client_nb; i++) {
         client = &(serv->clients[i].info);
         data = &(serv->clients[i].data);
         if (FD_ISSET(client->fd, serv->w_set)) {
-            ssize_t byte = send(client->fd, data, sizeof(transfer_t), 0);
-            return byte < 0 ? 1 : byte;
+            byte = send(client->fd, data, sizeof(transfer_t), 0);
+            return (byte < 0 ? 1 : byte);
         }
     }
     return 0;

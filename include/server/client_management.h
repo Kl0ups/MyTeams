@@ -9,4 +9,4 @@
 
 #include "server/data_utils.h"
 
-int add_temp_client(server_t * server);
+int add_temp_client(server_t *server);
