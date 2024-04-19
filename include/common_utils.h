@@ -11,6 +11,12 @@
 #include <uuid/uuid.h>
 #include <stdbool.h>
 
+#define MAX_NAME_LENGTH 32
+#define MAX_DESCRIPTION_LENGTH 255
+#define MAX_BODY_LENGTH 512
+
+#define UUID_SIZE 37
+
 /// @brief Structure containing all the data of a client
 /// @param id The unique identifier of the client
 /// @param fd The file descriptor of the client
@@ -41,9 +47,9 @@ typedef struct client_s {
 typedef struct team_s {
     uuid_t id;
     time_t ctt;
-    char *name, *description; // name and description
-    uuid_t *channels; // list of channels (channel_t)
-    uuid_t *members; // list of members (client_t)
+    char *name, *description;
+    uuid_t *channels;
+    uuid_t *members;
 } team_t;
 
 /// @brief Structure containing all the data of a channel
@@ -56,9 +62,9 @@ typedef struct team_s {
 typedef struct channel_s {
     uuid_t id;
     time_t ctt;
-    char *name, *description; // name and description
-    uuid_t *threads; // list of threads (thread_t)
-    uuid_t *members; // list of members (client_t)
+    char *name, *description;
+    uuid_t *threads;
+    uuid_t *members;
 } channel_t;
 
 /// @brief Structure containing all the data of a thread
@@ -72,9 +78,9 @@ typedef struct thread_s {
     uuid_t id;
     time_t ctt;
     uuid_t owner;
-    char *name; // title
-    char *post; // body
-    uuid_t *r_message; // list of replies (message_t)
+    char *name;
+    char *post;
+    uuid_t *r_message;
 } thread_t;
 
 /// @brief Structure containing all the data of a message
@@ -85,9 +91,9 @@ typedef struct thread_s {
 /// @param msg The body of the message
 typedef struct message_s {
     uuid_t id;
-    time_t ctt; // creation time
-    uuid_t t_client; // sender client (client_t)
-    uuid_t r_client; // receiver client (client_t)
+    time_t ctt;
+    uuid_t t_client;
+    uuid_t r_client;
     char *msg;
 } message_t;
 
@@ -114,5 +120,5 @@ typedef struct transfer_s {
     char *t_command;
     unsigned int p_size;
     data_t *p_data;
-    __attribute__((unused)) data_t p_extra;
+    data_t p_extra;
 } transfer_t;
