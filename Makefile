@@ -8,17 +8,7 @@
 CC = gcc
 RM = rm -rf
 
-SERV_SRC = app/server.c \
-	src/server/database_loading.c \
-	src/server/database_management.c \
-	src/server/generate_server.c \
-	src/server/prompt_misc_utils.c \
-	src/server/server_main_functions.c \
-	src/server/server_runtime_functions.c \
-	src/server/server_data_clearing.c \
-	src/server/server_client_handling.c \
-	src/server/server_client_loading.c \
-	src/server/server_request_handling.c \
+SERV_SRC = app/server.c
 
 CLI_SRC = app/client.c
 
@@ -34,11 +24,9 @@ SERV_BINARY = myteams_server
 
 CLI_BINARY = myteams_cli
 
-CFLAGS = -Wall -Wextra -Werror -I./include/ -lmyteams -L./libs/myteams -luuid
+CFLAGS = -Wall -Wextra -Werror
 
 DEBUG_FLAGS = -g3 -Wpedantic
-
-DOCKER_LD_ENV := LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/test/libs/myteams
 
 SHUFFLE := $(shell shuf -i1024-65535 -n1)
 
@@ -61,17 +49,19 @@ CLI_TEST_PARAMS = 127.0.0.1 $(SHUFFLE)
 .PHONY: all clean fclean re debug
 
 %.o: %.c
-	@$(CC) -c -o $@ $< $(CFLAGS)
-	@echo -e '[OK] Pre-compiled' $< '->' $@ ''
+	@gcc -c $< -o $@ $(CFLAGS)
+	@echo -e '[Build]' $(notdir $@)
 
 all: $(SERV_BINARY) $(CLI_BINARY)
 
 $(SERV_BINARY): $(SERV_C_OBJ)
-	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS)
+	@$(CC) -o $(SERV_BINARY) $(SERV_C_OBJ) $(CFLAGS) -I./include/server \
+	-lmyteams -L./libs/myteams
 	@echo -e '[Finish]' $(SERV_BINARY) 'compiled'
 
 $(CLI_BINARY): $(CLI_C_OBJ)
-	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS)
+	@$(CC) -o $(CLI_BINARY) $(CLI_C_OBJ) $(CFLAGS) -I./include/client \
+	-lmyteams -L./libs/myteams
 	@echo -e '[Finish]' $(CLI_BINARY) 'compiled'
 
 clean:
