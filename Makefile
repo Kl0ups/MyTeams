@@ -8,7 +8,17 @@
 CC = gcc
 RM = rm -rf
 
-SERV_SRC = app/server.c
+SERV_SRC = app/server.c \
+	src/server/database_loading.c \
+	src/server/database_management.c \
+	src/server/generate_server.c \
+	src/server/prompt_misc_utils.c \
+	src/server/server_main_functions.c \
+	src/server/server_runtime_functions.c \
+	src/server/server_data_clearing.c \
+	src/server/server_client_handling.c \
+	src/server/server_client_loading.c \
+	src/server/server_request_handling.c \
 
 CLI_SRC = app/client.c	\
 		src/send_messages.c \
@@ -29,6 +39,8 @@ CLI_BINARY = myteams_cli
 CFLAGS = -Wall -Wextra -Werror -I./include/ -lmyteams -L./libs/myteams -luuid
 
 DEBUG_FLAGS = -g3 -Wpedantic
+
+DOCKER_LD_ENV := LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/test/libs/myteams
 
 SHUFFLE := $(shell shuf -i1024-65535 -n1)
 
@@ -51,8 +63,8 @@ CLI_TEST_PARAMS = 127.0.0.1 $(SHUFFLE)
 .PHONY: all clean fclean re debug
 
 %.o: %.c
-	@gcc -c $< -o $@ $(CFLAGS)
-	@echo -e '[Build]' $(notdir $@)
+	@$(CC) -c -o $@ $< $(CFLAGS)
+	@echo -e '[OK] Pre-compiled' $< '->' $@ ''
 
 all: $(SERV_BINARY) $(CLI_BINARY)
 
