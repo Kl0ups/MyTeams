@@ -23,7 +23,6 @@
 /// @param id The unique identifier of the client
 /// @param fd The file descriptor of the client
 /// @param username The username of the client
-/// @param password The password of the client
 /// @param t_msg The temporary sending message of the client
 /// @param r_msg The temporary received message of the client
 /// @param is_active The activity status of the client
@@ -33,7 +32,7 @@
 typedef struct client_s {
     uuid_t id;
     int fd;
-    char *username, *password;
+    char *username;
     char *t_msg, *r_msg;
     bool is_active;
     uuid_t *team, *channel, *thread;

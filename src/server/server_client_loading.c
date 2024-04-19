@@ -12,7 +12,6 @@
 static int init_client_infos(client_t *client)
 {
     client->username = NULL;
-    client->password = NULL;
     client->is_active = true;
     client->channel = NULL;
     client->team = NULL;

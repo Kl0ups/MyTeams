@@ -16,8 +16,6 @@ void server_clear_clients(server_t *serv)
         close(serv->clients[i].info.fd);
         if (serv->clients[i].info.username)
             free(serv->clients[i].info.username);
-        if (serv->clients[i].info.password)
-            free(serv->clients[i].info.password);
         if (serv->clients[i].info.t_msg)
             free(serv->clients[i].info.t_msg);
         if (serv->clients[i].info.r_msg)
