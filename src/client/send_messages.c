@@ -19,22 +19,22 @@ const char *str_id(uuid_t id)
 
 static int handle_display_command1(char *command, transfer_t dt)
 {
-    if (strcmp(command, "EVENT TEAM CREATED")) {
+    if (strcmp(command, "750")) {
         return client_event_team_created(str_id(dt.p_data[0].team.id)
         , dt.p_data[0].team.name, dt.p_data[0].team.description);
     }
-    if (strcmp(command, "EVENT CHANNEL CREATED")) {
+    if (strcmp(command, "760")) {
         return client_event_channel_created(str_id(dt.p_data[0].channel.id)
         , dt.p_data[0].channel.name, dt.p_data[0].channel.description);
     }
-    if (strcmp(command, "EVENT THREAD CREATED")) {
+    if (strcmp(command, "770")) {
         return client_event_thread_created(str_id(dt.p_data[0].thread.id)
         , str_id(dt.p_data[0].thread.owner), dt.p_data[0].thread.ctt
         , dt.p_data[0].thread.name, dt.p_data[0].thread.post);
     }
-    if (strcmp(command, "UNAUTHORIZED"))
+    if (command[2] == '5')
         return client_error_unauthorized();
-    if (strcmp(command, "USER")) {
+    if (strcmp(command, "320") || strcmp(command, "910")) {
         return client_print_user(str_id(dt.p_data[0].client.id)
         , dt.p_data[0].client.username, dt.p_data[0].client.is_active);
     }
@@ -43,31 +43,31 @@ static int handle_display_command1(char *command, transfer_t dt)
 
 static int handle_display_command0(char *command, transfer_t dt)
 {
-    if (strcmp(command, "LOG IN")) {
+    if (strcmp(command, "210") || strcmp(command, "230")) {
         return client_event_logged_in(str_id(dt.p_data[0].client.id)
         , dt.p_data[0].client.username);
     }
-    if (strcmp(command, "LOG OUT")) {
+    if (strcmp(command, "220") || strcmp(command, "240")) {
         return client_event_logged_out(str_id(dt.p_data[0].client.id)
         , dt.p_data[0].client.username);
     }
-    if (strcmp(command, "MESSAGE RECEIVED")) {
+    if (strcmp(command, "430")) {
         return client_event_private_message_received(
         str_id(dt.p_data[0].message.t_client), dt.p_data[0].message.msg);
     }
-    if (strcmp(command, "THREAD REPLY RECEIVED")) {
+    if (strcmp(command, "780")) {
         return client_event_thread_reply_received(str_id(dt.p_data[0].team.id)
         , str_id(dt.p_extra.message.r_client)
         , str_id(dt.p_extra.message.t_client), dt.p_extra.message.msg);
     }
-    if (strcmp(command, "ALREADY EXISTS"))
+    if (command[2] == '6')
         return client_error_already_exist();
     return handle_display_command1(command, dt);
 }
 
 int send_messages(int sockfd)
 {
-    size_t size = 512;
+    size_t size = 524;
     char *buffer = malloc(size);
     transfer_t infos;
 

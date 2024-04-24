@@ -23,8 +23,9 @@ SERV_SRC = app/server.c \
 	src/server/command_utils.c \
 
 CLI_SRC = app/client.c	\
-		src/send_messages.c \
-		src/handle_display.c
+		src/client/send_messages.c \
+		src/client/handle_display.c	\
+		src/client/handle_display1.c
 
 SRC_TEST = ./test/main.c
 
