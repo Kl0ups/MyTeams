@@ -9,29 +9,6 @@
 #include "client/logging_client.h"
 #include "common_utils.h"
 
-static int handle_display_command6(char *command, transfer_t dt)
-{
-    if (command[2] == '4')
-        return client_error_unknown_user(str_id(dt.p_data[0].client.id));
-    if (strcmp(command, "830")) {
-        for (unsigned int i = 0; i < dt.p_size; i++) {
-            client_channel_print_threads(str_id(dt.p_data[i].thread.id)
-            , str_id(dt.p_data[i].thread.owner), dt.p_data[i].thread.ctt
-            , dt.p_data[i].thread.name, dt.p_data[i].thread.post);
-        }
-        return 0;
-    }
-    if (strcmp(command, "840")) {
-        for (unsigned int i = 0; i < dt.p_size; i++) {
-            client_thread_print_replies(str_id(dt.p_extra.thread.id)
-            , str_id(dt.p_data[i].message.t_client), dt.p_data[i].message.ctt
-            , dt.p_data[i].message.msg);
-        }
-        return 0;
-    }
-    return 0;
-}
-
 static int handle_display_command5(char *command, transfer_t dt)
 {
     if (strcmp(command, "730")) {
@@ -102,7 +79,7 @@ static int handle_display_command3(char *command, transfer_t dt)
     return handle_display_command4(command, dt);
 }
 
-int handle_display_command2(char *command, transfer_t dt)
+static int handle_display_command2(char *command, transfer_t dt)
 {
     if (strcmp(command, "310")) {
         for (unsigned int i = 0; i < dt.p_size; i++) {
@@ -124,4 +101,28 @@ int handle_display_command2(char *command, transfer_t dt)
         , dt.p_data[0].thread.name, dt.p_data[0].thread.post);
     }
     return handle_display_command3(command, dt);
+}
+
+int handle_display_command1(char *command, transfer_t dt)
+{
+    if (strcmp(command, "EVENT TEAM CREATED")) {
+        return client_event_team_created(str_id(dt.p_data[0].team.id)
+        , dt.p_data[0].team.name, dt.p_data[0].team.description);
+    }
+    if (strcmp(command, "EVENT CHANNEL CREATED")) {
+        return client_event_channel_created(str_id(dt.p_data[0].channel.id)
+        , dt.p_data[0].channel.name, dt.p_data[0].channel.description);
+    }
+    if (strcmp(command, "EVENT THREAD CREATED")) {
+        return client_event_thread_created(str_id(dt.p_data[0].thread.id)
+        , str_id(dt.p_data[0].thread.owner), dt.p_data[0].thread.ctt
+        , dt.p_data[0].thread.name, dt.p_data[0].thread.post);
+    }
+    if (strcmp(command, "UNAUTHORIZED"))
+        return client_error_unauthorized();
+    if (strcmp(command, "USER")) {
+        return client_print_user(str_id(dt.p_data[0].client.id)
+        , dt.p_data[0].client.username, dt.p_data[0].client.is_active);
+    }
+    return handle_display_command2(command, dt);
 }

@@ -26,7 +26,12 @@ int main(int ac, char **av)
     servaddr.sin_port = htons(atoi(av[2]));
     if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)))
         return 84;
-    send_messages(sockfd);
+    user_t user;
+    user.size = 524;
+    user.nb_buf = 0;
+    user.stdin_fd = fileno(stdin);
+    user.sockfd = sockfd;
+    send_messages(user);
     close(sockfd);
     return 0;
 }

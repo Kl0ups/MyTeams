@@ -18,6 +18,18 @@
 #include <string.h>
 #include "common_utils.h"
 
-int send_messages(int);
+typedef struct user_s {
+    fd_set read;
+    fd_set write;
+    int sockfd;
+    int stdin_fd;
+    char **buffers;
+    int nb_buf;
+    size_t size;
+    transfer_t infos;
+} user_t;
+
+int send_messages(user_t);
 const char *str_id(uuid_t id);
-int handle_display_command2(char *, transfer_t);
+int handle_display_command1(char *, transfer_t);
+int handle_display_command6(char *, transfer_t);
