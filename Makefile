@@ -19,6 +19,7 @@ SERV_SRC = app/server.c \
 	src/server/server_client_handling.c \
 	src/server/server_client_loading.c \
 	src/server/server_request_handling.c \
+	src/server/server_data_management.c \
 
 CLI_SRC = app/client.c	\
 		src/send_messages.c \
