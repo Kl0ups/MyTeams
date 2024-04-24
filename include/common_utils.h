@@ -15,6 +15,8 @@
 #define MAX_DESCRIPTION_LENGTH 255
 #define MAX_BODY_LENGTH 512
 
+#define MAX_CLIENT_REQUEST_SIZE 524
+
 #define UUID_SIZE 37
 
 /// @brief Structure containing all the data of a client
