@@ -24,7 +24,7 @@ static int handle_clients_read(server_t *server)
     for (unsigned int i = 0; i < server->client_nb; i++) {
         client = &(server->clients[i].info);
         if (FD_ISSET(client->fd, server->r_set))
-            return handle_request(server);
+            return handle_request(server, i);
     }
     return SYSTEM_ERROR;
 }
