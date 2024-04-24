@@ -14,18 +14,6 @@
 #define SYSTEM_ERROR 1
 #define SYSTEM_OK 0
 
-typedef enum rfc_status {
-    HELP_OK = 110,
-    HELP_ERROR = 111,
-    LOGIN_OK = 210,
-} rfc_status_t;
-
-typedef struct cmd_tab_s {
-    char *cmd;
-    rfc_status_t (*func)(server_t *serv, unsigned int client_index, char **args);
-    size_t max_args;
-} cmd_tab_t;
-
 typedef enum database_depth {
     NONE = -1,
     CLIENTS,
@@ -66,3 +54,15 @@ typedef struct load_tab_s {
     db_depth_t type;
     int (*load)(server_t *serv);
 } load_tab_t;
+
+typedef enum rfc_status {
+    HELP_OK = 110,
+    HELP_ERROR = 111,
+    LOGIN_OK = 210,
+} rfc_status_t;
+
+typedef struct cmd_tab_s {
+    char *cmd;
+    rfc_status_t (*func)(server_t *serv, unsigned int client_index, char **args);
+    size_t max_args;
+} cmd_tab_t;

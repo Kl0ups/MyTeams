@@ -7,6 +7,7 @@
 #include "server/data_utils.h"
 #include "server/client_commands.h"
 #include <sys/socket.h>
+#include <string.h>
 
 static const cmd_tab_t cmd_tab[] = {
     {"/login", &command_login, 1},
@@ -26,7 +27,6 @@ static const cmd_tab_t cmd_tab[] = {
 int handle_request(server_t *server, unsigned int client_index)
 {
     client_t *client = &(server->clients[client_index].info);
-    transfer_t *data = &(server->clients[client_index].data);
     char **args = NULL;
     ssize_t bytes = 0;
 

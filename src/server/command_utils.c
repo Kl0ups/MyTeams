@@ -7,6 +7,7 @@
 
 #include "server/data_utils.h"
 #include <string.h>
+#include <stdlib.h>
 
 static int count_args(char **args)
 {
