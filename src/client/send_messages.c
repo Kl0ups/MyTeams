@@ -5,7 +5,6 @@
 ** send_messages
 */
 
-#include <fcntl.h>
 #include "client/client.h"
 #include "client/logging_client.h"
 #include "common_utils.h"
@@ -18,77 +17,69 @@ const char *str_id(uuid_t id)
     return new_id;
 }
 
+static int handle_display_command1(char *command, transfer_t dt)
+{
+    if (strcmp(command, "750")) {
+        return client_event_team_created(str_id(dt.p_data[0].team.id)
+        , dt.p_data[0].team.name, dt.p_data[0].team.description);
+    }
+    if (strcmp(command, "760")) {
+        return client_event_channel_created(str_id(dt.p_data[0].channel.id)
+        , dt.p_data[0].channel.name, dt.p_data[0].channel.description);
+    }
+    if (strcmp(command, "770")) {
+        return client_event_thread_created(str_id(dt.p_data[0].thread.id)
+        , str_id(dt.p_data[0].thread.owner), dt.p_data[0].thread.ctt
+        , dt.p_data[0].thread.name, dt.p_data[0].thread.post);
+    }
+    if (command[2] == '5')
+        return client_error_unauthorized();
+    if (strcmp(command, "320") || strcmp(command, "910")) {
+        return client_print_user(str_id(dt.p_data[0].client.id)
+        , dt.p_data[0].client.username, dt.p_data[0].client.is_active);
+    }
+    return handle_display_command2(command, dt);
+}
+
 static int handle_display_command0(char *command, transfer_t dt)
 {
-    if (strcmp(command, "LOG IN")) {
+    if (strcmp(command, "210") || strcmp(command, "230")) {
         return client_event_logged_in(str_id(dt.p_data[0].client.id)
         , dt.p_data[0].client.username);
     }
-    if (strcmp(command, "LOG OUT")) {
+    if (strcmp(command, "220") || strcmp(command, "240")) {
         return client_event_logged_out(str_id(dt.p_data[0].client.id)
         , dt.p_data[0].client.username);
     }
-    if (strcmp(command, "MESSAGE RECEIVED")) {
+    if (strcmp(command, "430")) {
         return client_event_private_message_received(
         str_id(dt.p_data[0].message.t_client), dt.p_data[0].message.msg);
     }
-    if (strcmp(command, "THREAD REPLY RECEIVED")) {
+    if (strcmp(command, "780")) {
         return client_event_thread_reply_received(str_id(dt.p_data[0].team.id)
         , str_id(dt.p_extra.message.r_client)
         , str_id(dt.p_extra.message.t_client), dt.p_extra.message.msg);
     }
-    if (strcmp(command, "ALREADY EXISTS"))
+    if (command[2] == '6')
         return client_error_already_exist();
     return handle_display_command1(command, dt);
 }
 
-static int clearfd(user_t *user)
+int send_messages(int sockfd)
 {
-    FD_ZERO(&user->read);
-    FD_ZERO(&user->write);
-    FD_SET(user->sockfd, &user->read);
-    FD_SET(user->sockfd, &user->write);
-    FD_SET(user->stdin_fd, &user->read);
-    return 0;
-}
+    size_t size = 524;
+    char *buffer = malloc(size);
+    transfer_t infos;
 
-static user_t get_commands(user_t user)
-{
-    int len;
-
-    if (FD_ISSET(user.stdin_fd, &user.read)) {
-        user.nb_buf++;
-        user.buffers = realloc(user.buffers, user.nb_buf * sizeof(char *));
-        user.buffers[user.nb_buf - 1] = malloc(user.size);
-        getline(&user.buffers[user.nb_buf - 1], &user.size, stdin);
-        len = strlen(user.buffers[user.nb_buf - 1]);
-        user.buffers[user.nb_buf - 1][len - 1] = '\r';
-        user.buffers[user.nb_buf - 1][len] = '\n';
-    }
-    if (FD_ISSET(user.sockfd, &user.write)) {
-        if (user.nb_buf != 0) {
-            send(user.sockfd, user.buffers[0], user.size + 1, 0);
-            free(user.buffers[0]);
-            user.buffers = &user.buffers[1];
-            user.nb_buf--;
-        }
-    }
-    return user;
-}
-
-int send_messages(user_t user)
-{
-    if (fcntl(user.stdin_fd, F_SETFL, O_NONBLOCK) < 0)
-        return 1;
     while (1) {
-        clearfd(&user);
-        if (select(user.sockfd, &user.read, &user.write, NULL, NULL) < 0)
-            return 1;
-        if (FD_ISSET(user.sockfd, &user.read)) {
-            recv(user.sockfd, &user.infos, sizeof(transfer_t), 0);
-            handle_display_command0(user.infos.t_command, user.infos);
-        }
-        user = get_commands(user);
+        getline(&buffer, &size, stdin);
+        buffer[strlen(buffer) - 1] = '\r';
+        buffer[strlen(buffer)] = '\n';
+        send(sockfd, buffer, size + 1, 0);
+        bzero(buffer, size);
+        recv(sockfd, &infos, sizeof(transfer_t), 0);
+        handle_display_command0(infos.t_command, infos);
     }
-    free(user.buffers);
+    free(buffer);
+    return 0;
 }
